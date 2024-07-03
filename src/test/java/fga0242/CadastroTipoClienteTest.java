@@ -1,3 +1,5 @@
+package test.java.fga0242;
+
 import fga0242.Cliente;
 import org.junit.Test;
 import static org.junit.Assert.*;

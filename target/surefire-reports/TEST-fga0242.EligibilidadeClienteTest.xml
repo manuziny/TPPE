@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="CadastroTipoProdutoTest" time="0.015" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="fga0242.EligibilidadeClienteTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="17.0.11+9-Ubuntu-122.04.1"/>
@@ -56,7 +56,8 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.stdout.encoding" value="UTF-8"/>
   </properties>
-  <testcase classname="CadastroTipoProdutoTest" name="testCadastraProdutoValorPositivo[0]" time="0.014"/>
-  <testcase classname="CadastroTipoProdutoTest" name="testCadastraProdutoValorPositivo[1]" time="0"/>
-  <testcase classname="CadastroTipoProdutoTest" name="testCadastraProdutoValorPositivo[2]" time="0.001"/>
+  <testcase classname="fga0242.EligibilidadeClienteTest" name="testCalcularComprasUltimoMes[0]" time="0"/>
+  <testcase classname="fga0242.EligibilidadeClienteTest" name="testCalcularComprasUltimoMes[1]" time="0"/>
+  <testcase classname="fga0242.EligibilidadeClienteTest" name="testCalcularComprasUltimoMes[2]" time="0"/>
+  <testcase classname="fga0242.EligibilidadeClienteTest" name="testCalcularComprasUltimoMes[3]" time="0"/>
 </testsuite>

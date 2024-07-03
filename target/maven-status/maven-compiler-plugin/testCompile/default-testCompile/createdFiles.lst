@@ -1,4 +1,6 @@
 CadastroTipoProdutoTest.class
-CadastroTipoClienteTest.class
-VendaServiceTest.class
+test/java/fga0242/EligibilidadeClienteTest.class
+test/java/fga0242/SteClienteTest.class
+test/java/fga0242/ClienteCashbackTest.class
+test/java/fga0242/CadastroTipoClienteTest.class
 VendaTest.class

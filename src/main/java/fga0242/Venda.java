@@ -34,6 +34,8 @@ public class Venda {
         valorDesconto = 0;
         double valorImposto = 0;
 
+        cliente.calcularComprasUltimoMes();
+        
         for (ItemVenda item : itens) {
             double valorItem = item.getQuantidade() * item.getProduto().getValor();
             double descontoItem = 0;
@@ -71,6 +73,7 @@ public class Venda {
                 }
             }
         }
+        cliente.adicionarVenda(this);
     }
 
     private double[] calcularImpostos(Cliente cliente, double valorTotal) {

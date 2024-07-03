@@ -1,5 +1,10 @@
 # TPPE
 Repositório destinado para a disciplina de Técnicas de Programação em Plataformas Emergentes.
+
+## Estruturação do projeto
+
+O projeto foi estruturado por meio do Apache Maven. Portanto, para compilar o código, digite no terminal do linux `mvn compile`. Após isso, insira o seguinte comando para executar os testes: `mvn test`.
+
 ## Contribuidores
 
 <div align="center">
