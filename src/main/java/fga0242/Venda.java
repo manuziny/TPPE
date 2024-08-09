@@ -4,6 +4,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+Impactos da refatoração 'extrair método':
+* Melhoria da Legibilidade - O método `calcularValores()` ficou mais limpo e fácil de entender, facilitando a leitura e compreensão do código.
+* Facilidade de Manutenção - Alterações em regras de negócio, como o cálculo de descontos ou impostos, podem ser realizadas de forma isolada nos métodos específicos, sem a necessidade de modificar o método principal. Isso reduz a chance de introdução de erros.
+* Isolamento de Responsabilidades - Cada método agora tem uma responsabilidade clara e específica, o que está em linha com o princípio da responsabilidade única (Single Responsibility Principle). Isso melhora a modularidade do código.
+*/
+
 public class Venda {
     private Date data;
     private Cliente cliente;
@@ -17,7 +24,6 @@ public class Venda {
 
     private List<double []> impostosItens;
     private boolean usarCashback;
-    
 
     public Venda(Date data, Cliente cliente, List<ItemVenda> itens, String metodoPagamento, boolean usarCashback) {
         this.data = data;
@@ -35,45 +41,63 @@ public class Venda {
         double valorImposto = 0;
 
         cliente.calcularComprasUltimoMes();
-        
+
+        // Extrai o cálculo do valor de cada item
         for (ItemVenda item : itens) {
-            double valorItem = item.getQuantidade() * item.getProduto().getValor();
-            double descontoItem = 0;
-            if (cliente.getTipo().equals("Especial")) {
-                descontoItem += 0.10;
-                if (metodoPagamento.startsWith("429613")) {
-                    descontoItem += 0.10;
-                }
-            }
-            double[] impostos = calcularImpostos(cliente, valorItem);
-
-            double icms = impostos[0];
-            double impostoMunicipal = impostos[1];
-
-            impostosItens.add(new double[]{icms, impostoMunicipal});
-            valorImposto += icms + impostoMunicipal;
-            
-            valorDesconto += valorItem * descontoItem;
-            valorItem -= valorItem * descontoItem;
-            valorTotal += valorItem;
+            processarItemVenda(item);
         }
+
         valorFrete = calcularFrete(cliente);
-        valorTotal += valorFrete;
-        valorTotal += valorImposto;
+        valorTotal += valorFrete + valorImposto;
 
         if (cliente.getTipo().equals("Prime")) {
             aplicarCashback(metodoPagamento);
+            aplicarDescontoCashback();
+        }
 
-            double cb = cliente.getCashback();
+        cliente.adicionarVenda(this);
+    }
 
-            if (cb > 0.0) {       
-                if (usarCashback) {
-                    valorDesconto += cb;
-                    valorTotal -= valorDesconto;
-                }
+    // Novo método para processar cada item da venda
+    private void processarItemVenda(ItemVenda item) {
+        double valorItem = item.getQuantidade() * item.getProduto().getValor();
+        double descontoItem = calcularDescontoItem(cliente, metodoPagamento);
+        double[] impostos = calcularImpostos(cliente, valorItem);
+
+        double icms = impostos[0];
+        double impostoMunicipal = impostos[1];
+
+        impostosItens.add(new double[]{icms, impostoMunicipal});
+
+        valorTotal += aplicarDescontoEImpostos(valorItem, descontoItem, icms, impostoMunicipal);
+    }
+
+    // Novo método para calcular o desconto de um item
+    private double calcularDescontoItem(Cliente cliente, String metodoPagamento) {
+        double descontoItem = 0;
+        if (cliente.getTipo().equals("Especial")) {
+            descontoItem += 0.10;
+            if (metodoPagamento.startsWith("429613")) {
+                descontoItem += 0.10;
             }
         }
-        cliente.adicionarVenda(this);
+        return descontoItem;
+    }
+
+    // Novo método para aplicar descontos e impostos ao valor de um item
+    private double aplicarDescontoEImpostos(double valorItem, double descontoItem, double icms, double impostoMunicipal) {
+        valorDesconto += valorItem * descontoItem;
+        valorItem -= valorItem * descontoItem;
+        return valorItem + icms + impostoMunicipal;
+    }
+
+    // Método para aplicar o desconto do cashback no valor total
+    private void aplicarDescontoCashback() {
+        double cb = cliente.getCashback();
+        if (cb > 0.0 && usarCashback) {
+            valorDesconto += cb;
+            valorTotal -= valorDesconto;
+        }
     }
 
     private double[] calcularImpostos(Cliente cliente, double valorTotal) {
@@ -163,5 +187,5 @@ public class Venda {
     public double getImpostoMunicipal() {
         return impostoMunicipal;
     }
-
 }
+
