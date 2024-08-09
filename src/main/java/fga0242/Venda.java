@@ -22,7 +22,7 @@ public class Venda {
     private double icms;
     private double impostoMunicipal;
 
-    private List<double []> impostosItens;
+    private List<double[]> impostosItens;
     private boolean usarCashback;
 
     public Venda(Date data, Cliente cliente, List<ItemVenda> itens, String metodoPagamento, boolean usarCashback) {
@@ -30,7 +30,7 @@ public class Venda {
         this.cliente = cliente;
         this.itens = itens;
         this.metodoPagamento = metodoPagamento;
-        this.impostosItens = new LinkedList<double []>();
+        this.impostosItens = new LinkedList<double[]>();
         this.usarCashback = usarCashback;
         calcularValores();
     }
@@ -62,14 +62,18 @@ public class Venda {
     private void processarItemVenda(ItemVenda item) {
         double valorItem = item.getQuantidade() * item.getProduto().getValor();
         double descontoItem = calcularDescontoItem(cliente, metodoPagamento);
-        double[] impostos = calcularImpostos(cliente, valorItem);
 
-        double icms = impostos[0];
-        double impostoMunicipal = impostos[1];
+        // Substituíção da lógica de calcular impostos por uma instância da nova classe 'CalculadoraImpostos'
+        CalculadoraImpostos calculadoraImpostos = new CalculadoraImpostos(cliente, valorItem);
+        double[] impostos = calculadoraImpostos.calcular();
 
-        impostosItens.add(new double[]{icms, impostoMunicipal});
+        // Atribui a taxa de imposto ao invés do valor monetário
+        this.icms = calculadoraImpostos.getIcms();
+        this.impostoMunicipal = calculadoraImpostos.getImpostoMunicipal();
 
-        valorTotal += aplicarDescontoEImpostos(valorItem, descontoItem, icms, impostoMunicipal);
+        impostosItens.add(new double[]{impostos[0], impostos[1]});
+
+        valorTotal += aplicarDescontoEImpostos(valorItem, descontoItem, impostos[0], impostos[1]);
     }
 
     // Novo método para calcular o desconto de um item
@@ -98,19 +102,6 @@ public class Venda {
             valorDesconto += cb;
             valorTotal -= valorDesconto;
         }
-    }
-
-    private double[] calcularImpostos(Cliente cliente, double valorTotal) {
-        if (cliente.getEstado().equals("DF")) {
-            this.icms = 0.18;
-            this.impostoMunicipal = 0.00;
-        } else {
-            this.icms = 0.12;
-            this.impostoMunicipal = 0.04;
-        }
-        double valorIcms = valorTotal * this.icms;
-        double valorImpostoMunicipal = valorTotal * this.impostoMunicipal;
-        return new double[]{valorIcms, valorImpostoMunicipal};
     }
 
     private double calcularFrete(Cliente cliente) {
@@ -188,4 +179,3 @@ public class Venda {
         return impostoMunicipal;
     }
 }
-

@@ -1,7 +1,7 @@
 package fga0242;
 
 /* 
-Impactos das alterações:
+Impactos da refatoração 'extrair classe':
 * Isolamento de Responsabilidades - Cada método agora tem uma responsabilidade clara e específica, 
 o que está em linha com o princípio da responsabilidade única (Single Responsibility Principle). Isso melhora a modularidade do código.
 * Facilidade de Manutenção - Com a separação, qualquer alteração necessária 
