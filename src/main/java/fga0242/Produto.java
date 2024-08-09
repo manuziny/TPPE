@@ -1,24 +1,34 @@
 package fga0242;
 
+/* 
+Impactos das alterações:
+* Isolamento de Responsabilidades - Cada método agora tem uma responsabilidade clara e específica, 
+o que está em linha com o princípio da responsabilidade única (Single Responsibility Principle). Isso melhora a modularidade do código.
+* Facilidade de Manutenção - Com a separação, qualquer alteração necessária 
+na lógica de identificação de um produto pode ser realizada diretamente na classe 
+'IdentificacaoProduto', minimizando impactos na classe 'Produto'.
+*/
+
 public class Produto {
-    private String codigo;
-    private String descricao;
+    // Atributo 'identificacao' é agora uma instância da classe 'IdentificacaoProduto'
+    private IdentificacaoProduto identificacao;
     private double valor;
     private String unidade;
 
+    // Construtor de 'Produto' agora inicializa 'identificacao' usando a nova classe
     public Produto(String codigo, String descricao, double valor, String unidade) {
-        this.codigo = codigo;
-        this.descricao = descricao;
+        this.identificacao = new IdentificacaoProduto(codigo, descricao); // Instancia a nova classe
         this.valor = valor;
         this.unidade = unidade;
     }
 
+    // Métodos 'getCodigo' e 'getDescricao' agora delegam para a instância de 'IdentificacaoProduto'
     public String getCodigo() {
-        return codigo;
+        return identificacao.getCodigo(); // Delegação
     }
 
     public String getDescricao() {
-        return descricao;
+        return identificacao.getDescricao(); // Delegação
     }
 
     public double getValor() {
